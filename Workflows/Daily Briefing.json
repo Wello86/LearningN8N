@@ -1,0 +1,346 @@
+{
+  "name": "Daily Briefing",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e6e54e05-4730-4ad4-beea-db1cf3220b81",
+              "leftValue": "={{ $json.isCritical }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -400,
+        -48
+      ],
+      "id": "353aab30-9b3f-4a31-9e56-9bdba0c303d2",
+      "name": "Is there anything critical?"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1072,
+        -48
+      ],
+      "id": "01de5a03-7c6f-4202-be91-7bc09ca3f758",
+      "name": "Trigger by midnight"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/search/issues?q=repo:n8n-io/n8n+is:issue+is:open+created:>{{ $now.minus(1,'day').toFormat('yyyy-MM-dd') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -848,
+        -48
+      ],
+      "id": "139c0826-2193-4a4f-a8f3-aa7118f05882",
+      "name": "Get issues from Github"
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst issues = response.items || [];\n\nreturn issues.map(issue => {\n  const labels = issue.labels.map(l => l.name);\n  return {\n    json: {\n      number: issue.number,\n      title: issue.title,\n      author: issue.user.login,\n      labels: labels.join(', '),\n      isCritical: labels.some(l => l.toLowerCase().includes('in-linear') || l.toLowerCase().includes('security')),\n      created_at: issue.created_at\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        -48
+      ],
+      "id": "5a6d1fca-536a-4849-8101-929cc09718c9",
+      "name": "Filter & Transform"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        -272
+      ],
+      "id": "4bc3fb20-cc13-472a-8a28-820ece4321a8",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y",
+          "mode": "list",
+          "cachedResultName": "Learn AI Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1739954779,
+          "mode": "list",
+          "cachedResultName": "N8n Issues",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y/edit#gid=1739954779"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $json.title }}",
+            "Author": "={{ $json.author }}",
+            "labels": "={{ $json.labels }}",
+            "IsCritical": "={{ $json.isCritical }}",
+            "CreationDate": "={{ $json.created_at }}",
+            "Number": "={{ $json.number }}"
+          },
+          "matchingColumns": [
+            "Number"
+          ],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Number",
+              "displayName": "Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Author",
+              "displayName": "Author",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "labels",
+              "displayName": "labels",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "IsCritical",
+              "displayName": "IsCritical",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "CreationDate",
+              "displayName": "CreationDate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -224,
+        -272
+      ],
+      "id": "00cb5161-a5d8-466b-8f59-b057db7f44d9",
+      "name": "Save critical issues",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vGUVceKhtFv0PL3e",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "wael_el-qamash@epam.com",
+        "subject": "Critical Issues Detected on N8N public repo",
+        "emailType": "text",
+        "message": "Dear Admin, \n\nKindly note that midnight automation service has ran and no critical issues detected.\n\nThanks,\nN8n Automation Job\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "e021334a-8d19-4108-aa0b-6e6019d82432",
+      "name": "Successful Notification",
+      "webhookId": "c8ce0a10-1f23-4e2d-83c4-d426ec36a209",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P8GKhiB38Q5N5UfK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "wael_el-qamash@epam.com",
+        "subject": "Critical Issues Detected on N8N public repo",
+        "emailType": "text",
+        "message": "Dear Admin, \n\nKindly note that Critical issues were detected on the public repo of n8n.\n\nThanks,\nN8n Automation Job\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -272
+      ],
+      "id": "8e84018a-07ae-42c9-88f6-03d369c840d0",
+      "name": "Notify admin about critical issues",
+      "webhookId": "c8ce0a10-1f23-4e2d-83c4-d426ec36a209",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P8GKhiB38Q5N5UfK",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger by midnight": {
+      "main": [
+        [
+          {
+            "node": "Get issues from Github",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get issues from Github": {
+      "main": [
+        [
+          {
+            "node": "Filter & Transform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter & Transform": {
+      "main": [
+        [
+          {
+            "node": "Is there anything critical?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is there anything critical?": {
+      "main": [
+        [
+          {
+            "node": "Save critical issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Successful Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Notify admin about critical issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save critical issues": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "kzmBgo0nF78lK7B8",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
+  },
+  "versionId": "31f9c6e5-00cb-4e81-a9d8-94805164413f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3eb68d38f3b094040b0bcd85acf00d6e17f84871eee2f91dbdb8c3315ca55659"
+  },
+  "id": "Gizb5G1R8rL6uk8n",
+  "tags": []
+}

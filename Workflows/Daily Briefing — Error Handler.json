@@ -1,0 +1,140 @@
+{
+  "name": "Daily Briefing — Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0d2f43f0-41fd-4427-a755-7bcb773dae24",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "wael_el-qamash@epam.com",
+        "subject": "={{ $json.workflow.name }}",
+        "emailType": "text",
+        "message": "={{ $json.execution.error.message }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        -128
+      ],
+      "id": "f6f6b538-b0bf-4500-89ea-f00daa53ab52",
+      "name": "Notify admin with error",
+      "webhookId": "3bc31815-7d9e-4255-942f-d81ad3f557c6",
+      "notesInFlow": false,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "P8GKhiB38Q5N5UfK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y",
+          "mode": "list",
+          "cachedResultName": "Learn AI Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 108674676,
+          "mode": "list",
+          "cachedResultName": "Daily Briefing — Error Handler",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1XMgTZ9b5FZcAgSMi97ctUrUnSByKhFIUGegXyldU58Y/edit#gid=108674676"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Error Message": "={{ $json.execution.error.message }}"
+          },
+          "matchingColumns": [
+            "Error Message"
+          ],
+          "schema": [
+            {
+              "id": "Error Message",
+              "displayName": "Error Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        48
+      ],
+      "id": "b60adfa2-5c23-47b2-b915-93f65f0422a8",
+      "name": "Append error in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "vGUVceKhtFv0PL3e",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Notify admin with error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append error in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify admin with error": {
+      "main": [
+        []
+      ]
+    },
+    "Append error in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "6a4ea922-9119-4ca3-86b9-72703381f925",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3eb68d38f3b094040b0bcd85acf00d6e17f84871eee2f91dbdb8c3315ca55659"
+  },
+  "id": "kzmBgo0nF78lK7B8",
+  "tags": []
+}
