@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: ai-shopping-assistant-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ai_shopping_assistant
+      POSTGRES_PASSWORD: ai_shopping_assistant
+      POSTGRES_DB: ai_shopping_assistant
+    ports:
+      - "5432:5432"
+    volumes:
+      - ai_shopping_assistant_pgdata:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_shopping_assistant -d ai_shopping_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ai-shopping-assistant-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - ai_shopping_assistant_pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  ai_shopping_assistant_pgdata:
+  ai_shopping_assistant_pgadmin_data:
