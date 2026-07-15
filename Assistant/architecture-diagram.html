@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Shopping Assistant — Architecture</title>
+<style>
+  :root{
+    --ink:#1b2430;
+    --sub:#5b6674;
+    --line:#c9d2dc;
+    --core-bg:#eef3fb;
+    --core-border:#5b7fd6;
+    --infra-bg:#fdf3e6;
+    --infra-border:#d98a2b;
+    --web-bg:#eaf6ee;
+    --web-border:#3f9d5c;
+    --ext-bg:#f6eef8;
+    --ext-border:#9b5bc7;
+    --db-bg:#eef7f7;
+    --db-border:#2d9d97;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI',Arial,sans-serif;
+    background:#ffffff;
+    color:var(--ink);
+    width:1280px;
+    padding:28px 36px 34px;
+  }
+  h1{
+    font-size:22px;
+    margin:0 0 2px;
+    font-weight:700;
+  }
+  .subtitle{
+    color:var(--sub);
+    font-size:13px;
+    margin:0 0 18px;
+  }
+  .col{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+  }
+  .row{
+    display:flex;
+    justify-content:center;
+    gap:26px;
+    align-items:stretch;
+  }
+  .arrow-down{
+    text-align:center;
+    color:var(--sub);
+    font-size:20px;
+    line-height:1;
+    margin:2px 0;
+  }
+  .arrow-label{
+    font-size:11px;
+    color:var(--sub);
+    text-align:center;
+    margin-top:-4px;
+  }
+  .box{
+    border-radius:10px;
+    padding:12px 16px;
+    border:2px solid var(--line);
+    background:#fff;
+  }
+  .box h3{
+    margin:0 0 6px;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .box ul{
+    margin:0;
+    padding-left:16px;
+    font-size:11.5px;
+    color:#333;
+    line-height:1.55;
+  }
+  .box .tag{
+    font-size:10px;
+    font-weight:600;
+    padding:1px 7px;
+    border-radius:20px;
+    color:#fff;
+  }
+  .web{border-color:var(--web-border);background:var(--web-bg);}
+  .web .tag{background:var(--web-border);}
+  .core-wrap{
+    border:2.5px dashed var(--core-border);
+    border-radius:16px;
+    padding:14px;
+    background:repeating-linear-gradient(135deg,var(--core-bg),var(--core-bg) 10px,#f6f9fe 10px,#f6f9fe 20px);
+    width:900px;
+  }
+  .core-title{
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    color:var(--core-border);
+    margin-bottom:8px;
+    letter-spacing:.3px;
+  }
+  .core-inner{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+  }
+  .core{border-color:var(--core-border);background:#ffffffcc;}
+  .core .tag{background:var(--core-border);}
+  .infra{border-color:var(--infra-border);background:var(--infra-bg);}
+  .infra .tag{background:var(--infra-border);}
+  .ext{border-color:var(--ext-border);background:var(--ext-bg);}
+  .ext .tag{background:var(--ext-border);}
+  .db{border-color:var(--db-border);background:var(--db-bg);}
+  .db .tag{background:var(--db-border);}
+  .docker-wrap{
+    border:2.5px dashed var(--db-border);
+    border-radius:16px;
+    padding:12px;
+  }
+  .docker-title{
+    text-align:center;
+    font-size:11px;
+    font-weight:700;
+    color:var(--db-border);
+    margin-bottom:8px;
+    letter-spacing:.3px;
+  }
+  .docker-inner{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+  }
+  .browser{
+    border:2px solid #888;
+    background:#f4f4f4;
+    border-radius:10px;
+    padding:8px 22px;
+    font-size:12.5px;
+    font-weight:600;
+    text-align:center;
+  }
+  .legend{
+    display:flex;
+    gap:18px;
+    justify-content:center;
+    margin-top:18px;
+    font-size:11px;
+    color:var(--sub);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block;}
+</style>
+</head>
+<body>
+
+  <h1>AI Shopping Assistant — Architecture</h1>
+  <p class="subtitle">React chat widget → .NET 10 API (Clean/Hexagonal) → CodeMie LLM gateway + PostgreSQL/pgvector</p>
+
+  <div class="col">
+    <div class="browser">🧑‍💻 Customer's Browser</div>
+    <div class="arrow-down">↓</div>
+
+    <div class="box web" style="width:320px;text-align:center;">
+      <h3 style="justify-content:center;margin:0;">⚛️ Frontend <span class="tag">React 19 + Vite</span></h3>
+    </div>
+
+    <div class="arrow-down">↓ ↑</div>
+
+    <div class="box web" style="width:520px;text-align:center;">
+      <h3 style="justify-content:center;margin:0;">🌐 WebApi <span class="tag">ASP.NET Core</span></h3>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="core-wrap">
+      <div class="core-title">Core (ReAct Agent Loop) (Reason - Act - Observe)</div>
+      <div class="core-inner">
+        <div class="box core" style="width:130px;text-align:center;">
+          <h3 style="justify-content:center;margin:0;">Interfaces</h3>
+        </div>
+        <div class="box core" style="width:130px;text-align:center;">
+          <h3 style="justify-content:center;margin:0;">Entities</h3>
+        </div>
+        <div class="box core" style="width:180px;text-align:center;">
+          <h3 style="justify-content:center;margin:0;">Tools</h3>
+          <div style="font-size:10px;color:var(--sub);margin-top:2px;">get_order_status<br>search_policy_and_product_docs</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="box infra" style="width:760px;text-align:center;">
+      <h3 style="justify-content:center;margin:0;">🧩 Infrastructure <span class="tag">EF Core · Npgsql · Pgvector.EntityFrameworkCore</span></h3>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="row">
+      <div class="box ext" style="width:300px;text-align:center;">
+        <h3 style="justify-content:center;margin:0;">☁️ CodeMie Gateway <span class="tag">HTTP</span></h3>
+        <div style="font-size:10.5px;color:var(--sub);margin-top:2px;">chat: claude-sonnet-5<br>embed: voyage-2</div>
+      </div>
+
+      <div class="docker-wrap">
+        <div class="docker-title">🐳 CONTAINERS</div>
+        <div class="docker-inner">
+          <div class="box db" style="width:300px;text-align:center;">
+            <h3 style="justify-content:center;margin:0;">🐘 PostgreSQL 17 + pgvector</h3>
+          </div>
+
+          <div class="box db" style="width:160px;text-align:center;">
+            <h3 style="justify-content:center;margin:0;">🛠️ pgAdmin</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="dot" style="background:var(--web-border);"></i> Presentation layer</span>
+    <span><i class="dot" style="background:var(--core-border);"></i> Core</span>
+    <span><i class="dot" style="background:var(--infra-border);"></i> Infrastructure</span>
+    <span><i class="dot" style="background:var(--ext-border);"></i> External integration</span>
+    <span><i class="dot" style="background:var(--db-border);"></i> Containers</span>
+  </div>
+
+</body>
+</html>
