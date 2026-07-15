@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AiShoppingAssistant.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b49a58306a9820fa774dedbc3ae78f74ac2c4441")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f64809e761f2de4280cfcab7c251e757e3a80941")]
 [assembly: System.Reflection.AssemblyProductAttribute("AiShoppingAssistant.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AiShoppingAssistant.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

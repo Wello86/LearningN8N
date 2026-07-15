@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AiShoppingAssistant.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0bfdf677f110f8ad8943fd3164ad6a67047727ca")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f64809e761f2de4280cfcab7c251e757e3a80941")]
 [assembly: System.Reflection.AssemblyProductAttribute("AiShoppingAssistant.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AiShoppingAssistant.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
