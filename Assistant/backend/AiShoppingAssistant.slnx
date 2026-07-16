@@ -6,7 +6,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/AiShoppingAssistant.Core.Tests/AiShoppingAssistant.Core.Tests.csproj" />
-    <Project Path="tests/AiShoppingAssistant.Infrastructure.Tests/AiShoppingAssistant.Infrastructure.Tests.csproj" />
     <Project Path="tests/AiShoppingAssistant.WebApi.IntegrationTests/AiShoppingAssistant.WebApi.IntegrationTests.csproj" />
   </Folder>
 </Solution>
