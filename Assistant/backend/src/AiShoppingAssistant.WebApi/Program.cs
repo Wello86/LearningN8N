@@ -24,6 +24,8 @@ builder.Services.AddScoped<ConversationHistoryLoader>();
 builder.Services.AddScoped<IReActTool, GetOrderStatusTool>();
 builder.Services.AddScoped<IReActTool, SearchPolicyAndProductDocsTool>();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -34,9 +36,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapHealthChecks("/health");
+
 // DEV-ONLY AUTHENTICATION STAND-IN (research.md §6) — reads X-Customer-Id.
 // Must be replaced by the platform's real session/auth integration.
-app.UseDevCustomerId();
+// /health is exempt: infra healthchecks (docker-compose, k8s probes) don't send app headers.
+app.UseWhen(
+    context => !context.Request.Path.StartsWithSegments("/health"),
+    branch => branch.UseDevCustomerId());
 
 app.UseAuthorization();
 
